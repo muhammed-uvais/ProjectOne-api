@@ -13,9 +13,10 @@ namespace ProjectOne.Models
         public string NumberDisplay { get; set; } = null!;
         public DateTime EntryDate { get; set; }
         public DateTime CreatedDate { get; set; }
-
+        public string? CustomerName { get; set; }
         public int IsActive { get; set; }
-
+         
+        public InvoiceCustomerDetailModel CustomerDetails { get; set; }
         public IEnumerable<InvoiceContentModel> InvoiceItems { get; set; }
     }
 }
