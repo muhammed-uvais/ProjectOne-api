@@ -25,6 +25,8 @@ public partial class ProjectOneContext : DbContext
 
     public virtual DbSet<InvoiceContent> InvoiceContents { get; set; }
 
+    public virtual DbSet<InvoiceCustomerDetail> InvoiceCustomerDetails { get; set; }
+
     public virtual DbSet<InvoiceHdr> InvoiceHdrs { get; set; }
 
     public virtual DbSet<MenuMaster> MenuMasters { get; set; }
@@ -117,6 +119,13 @@ public partial class ProjectOneContext : DbContext
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("VATAmount");
             entity.Property(e => e.Vatpercentage).HasColumnName("VATPercentage");
+        });
+
+        modelBuilder.Entity<InvoiceCustomerDetail>(entity =>
+        {
+            entity.Property(e => e.Address).HasMaxLength(350);
+            entity.Property(e => e.Name).HasMaxLength(150);
+            entity.Property(e => e.Vatumber).HasMaxLength(50);
         });
 
         modelBuilder.Entity<InvoiceHdr>(entity =>

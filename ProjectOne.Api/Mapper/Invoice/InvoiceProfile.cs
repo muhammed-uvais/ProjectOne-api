@@ -12,6 +12,9 @@ namespace ProjectOne.Api.Mapper.Login
 
             CreateMap<InvoiceContentEntity, InvoiceContentModel>();
             CreateMap<InvoiceContentModel, InvoiceContentEntity>();
+
+            CreateMap<InvoiceCustomerDetailModel, InvoiceCustomerDetailEntity>();
+            CreateMap<InvoiceCustomerDetailEntity, InvoiceCustomerDetailModel>();
         }
     }
 }

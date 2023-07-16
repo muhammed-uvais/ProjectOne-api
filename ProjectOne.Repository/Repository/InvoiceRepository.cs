@@ -12,7 +12,7 @@ namespace ProjectOne.Repository.Repository
     public interface IInvoiceRepository {
         CommandResult CreateInvoice(InvoiceHdrEntity entity);
         CommandResult DeleteById(int Id);
-        List<InvoiceHdrEntity> GetAll();
+        List<InvoiceHdrEntity> GetAll(DateTime? FromDate, DateTime? ToDate);
         InvoiceHdrEntity GetById(int Id);
     }
 
@@ -71,7 +71,7 @@ namespace ProjectOne.Repository.Repository
                     else
                     {
                         refno = refno + 1;
-                        refnodisplay = prefix + (refno + 1).ToString();
+                        refnodisplay = prefix + (refno).ToString();
                     }
 
                     InvoiceHdr invoicehdr = new InvoiceHdr
@@ -84,6 +84,19 @@ namespace ProjectOne.Repository.Repository
                     };
                     Context.InvoiceHdrs.Add(invoicehdr);
                     Context.SaveChanges();
+
+                    InvoiceCustomerDetail invoiceCustomerDetail = new InvoiceCustomerDetail { 
+                        
+                        InvoiceHdrId = invoicehdr.Id,
+                        Name = entity.CustomerDetails.Name,
+                        Address = entity.CustomerDetails.Address,
+                        Vatumber = entity.CustomerDetails.Vatumber,
+                        IsActive = 1,
+                         };
+                    Context.InvoiceCustomerDetails.Add(invoiceCustomerDetail);
+                    Context.SaveChanges();
+
+
                     foreach (var item in entity.InvoiceItems)
                     {
                         if(item != null)
@@ -111,7 +124,7 @@ namespace ProjectOne.Repository.Repository
                 else
                 {
                     var existinginvoice = (from hdr in Context.InvoiceHdrs
-                                           where hdr.NumberDisplay.ToUpper().Equals(entity.NumberDisplay.ToUpper())
+                                           where hdr.NumberDisplay.ToUpper().Equals(entity.NumberDisplay.ToUpper()) && hdr.Id != entity.Id 
                                            select hdr).FirstOrDefault();
                     if (existinginvoice != null)
                     {
@@ -131,6 +144,15 @@ namespace ProjectOne.Repository.Repository
                     {
                         invoiceHdr.EntryDate = entity.EntryDate;
                         invoiceHdr.CreatedDate =DateTime.Now;
+                        Context.SaveChanges();
+                    }
+                    InvoiceCustomerDetail detail = Context.InvoiceCustomerDetails.
+                        Where(x => x.InvoiceHdrId == entity.Id && x.Id == entity.CustomerDetails.Id).FirstOrDefault();
+                    if (detail != null)
+                    {
+                        detail.Name = entity.CustomerDetails.Name;
+                        detail.Address = entity.CustomerDetails.Address;
+                        detail.Vatumber = entity.CustomerDetails.Vatumber;
                         Context.SaveChanges();
                     }
                     var previousItems = Context.InvoiceContents.Where(x => x.InvoiceHdrId == entity.Id).ToList();
@@ -159,6 +181,8 @@ namespace ProjectOne.Repository.Repository
                     transaction.Commit();
                     Rslt.Id = entity.Id;
                 }
+
+                Rslt.ErrorCodes = lsterror;
                 return Rslt;
             }
             catch(Exception ex) { }
@@ -182,6 +206,7 @@ namespace ProjectOne.Repository.Repository
                     Delete.IsActive = 0;
                     Context.SaveChanges();
                 }
+                transaction.Commit();
                 Rslt.ErrorCodes = lsterror;
                 return Rslt;
             }
@@ -192,19 +217,27 @@ namespace ProjectOne.Repository.Repository
                 return Rslt;
             }
         }
-        public List<InvoiceHdrEntity> GetAll()
+        public List<InvoiceHdrEntity> GetAll(DateTime? FromDate , DateTime? ToDate)
         {
             var rtndata = (from hdr in Context.InvoiceHdrs
+                           join customer in Context.InvoiceCustomerDetails
+                           on hdr.Id equals customer.InvoiceHdrId
                            where hdr.IsActive == 1
+                           && customer.IsActive == 1
                            select new InvoiceHdrEntity
                            {
                                Id = hdr.Id,
-                               EntryDate    = hdr.EntryDate,
-                               Number   = hdr.Number,
-                               NumberDisplay =  hdr.NumberDisplay,
+                               EntryDate = hdr.EntryDate,
+                               Number = hdr.Number,
+                               NumberDisplay = hdr.NumberDisplay,
+                               CustomerName = customer.Name,
                                CreatedDate = hdr.CreatedDate,
                                IsActive = hdr.IsActive
                            }).ToList();
+            if(FromDate != null && ToDate != null )
+            {
+                rtndata = rtndata.Where(hdr =>  hdr.CreatedDate.Date >=  FromDate.Value.Date && hdr.CreatedDate.Date <= ToDate.Value.Date).ToList();
+            }
             return rtndata;
         }
        public InvoiceHdrEntity GetById(int Id)
@@ -223,7 +256,7 @@ namespace ProjectOne.Repository.Repository
              {
                 rtndata.InvoiceItems = (from chld in Context.InvoiceContents
                                         where chld.IsActive == 1 &&
-                                        chld.Id == rtndata.Id
+                                        chld.InvoiceHdrId == rtndata.Id
                                         select new InvoiceContentEntity
                                         {
                                             Id = chld.Id,
@@ -237,7 +270,19 @@ namespace ProjectOne.Repository.Repository
                                             TotalAmount = chld.TotalAmount,
                                             IsActive = chld.IsActive,
                                         }).ToList();
-             }
+                rtndata.CustomerDetails = (from customer in Context.InvoiceCustomerDetails
+                                           where customer.InvoiceHdrId == rtndata.Id && customer.IsActive == 1
+                                           select new InvoiceCustomerDetailEntity
+                                           {
+                                               Id = customer.Id,
+                                               InvoiceHdrId = customer.InvoiceHdrId,
+                                               Name = customer.Name,
+                                               Address = customer.Address,
+                                               Vatumber =customer.Vatumber,
+                                               IsActive = customer.IsActive
+                                           }).FirstOrDefault();
+
+                }
             return rtndata;
         }
 

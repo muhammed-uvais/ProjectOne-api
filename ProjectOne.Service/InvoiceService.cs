@@ -14,8 +14,9 @@ namespace ProjectOne.Service
     public interface IInvoiceService {
         CommandResult CreateInvoice(InvoiceHdrModel model);
         CommandResult DeleteById(List<int> IDs);
-        List<InvoiceHdrModel> GetAll();
+        List<InvoiceHdrModel> GetAll(DateTime? FromDate, DateTime? ToDate);
         InvoiceHdrModel GetById(int Id);
+        
     }
 
     public class InvoiceService : IInvoiceService
@@ -44,11 +45,11 @@ namespace ProjectOne.Service
             rslt.ErrorCodes = lsterror;
             return rslt;
         }
-        public List<InvoiceHdrModel> GetAll()
+        public List<InvoiceHdrModel> GetAll(DateTime? FromDate, DateTime? ToDate)
         {
             // var Rtndata = _invoiceRepository.GetAll();
             //return _mapper.Map<List<InvoiceHdrModel>>(Rtndata);
-            return _mapper.Map<List<InvoiceHdrModel>>(_invoiceRepository.GetAll());
+            return _mapper.Map<List<InvoiceHdrModel>>(_invoiceRepository.GetAll(FromDate ,ToDate));
             
         }
         public InvoiceHdrModel GetById(int Id)
