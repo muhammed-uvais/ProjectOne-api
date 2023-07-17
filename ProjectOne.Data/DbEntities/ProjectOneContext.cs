@@ -23,6 +23,8 @@ public partial class ProjectOneContext : DbContext
 
     public virtual DbSet<Customer> Customers { get; set; }
 
+    public virtual DbSet<InvoiceAmount> InvoiceAmounts { get; set; }
+
     public virtual DbSet<InvoiceContent> InvoiceContents { get; set; }
 
     public virtual DbSet<InvoiceCustomerDetail> InvoiceCustomerDetails { get; set; }
@@ -107,6 +109,15 @@ public partial class ProjectOneContext : DbContext
             entity.Property(e => e.Trn)
                 .HasMaxLength(50)
                 .HasColumnName("TRN");
+        });
+
+        modelBuilder.Entity<InvoiceAmount>(entity =>
+        {
+            entity.Property(e => e.TaxableValue).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Vatamount)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("VATAmount");
         });
 
         modelBuilder.Entity<InvoiceContent>(entity =>

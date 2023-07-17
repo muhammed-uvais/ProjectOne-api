@@ -51,11 +51,9 @@ namespace ProjectOne.Api.Controllers
         public async Task<IActionResult> GeneratePDF(int InvoiceNo)
         {
             var pdf = new PdfDocument();
-            StringBuilder htmlcontent = new StringBuilder();
 
-            htmlcontent.Append(
-                "<h1>hiiiii</hi>"
-                );
+            var htmlcontent =  _invoiceService.GeneratePDF(InvoiceNo);
+
             PdfGenerator.AddPdfPages(pdf, htmlcontent.ToString(), PageSize.A4);
             byte[]? response = null;
             using (MemoryStream ms = new MemoryStream())

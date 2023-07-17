@@ -16,7 +16,9 @@ namespace ProjectOne.Service
         CommandResult DeleteById(List<int> IDs);
         List<InvoiceHdrModel> GetAll(DateTime? FromDate, DateTime? ToDate);
         InvoiceHdrModel GetById(int Id);
-        
+        string GeneratePDF(int Inv);
+
+
     }
 
     public class InvoiceService : IInvoiceService
@@ -55,6 +57,12 @@ namespace ProjectOne.Service
         public InvoiceHdrModel GetById(int Id)
         {
             return _mapper.Map<InvoiceHdrModel>(_invoiceRepository.GetById(Id));
+        }
+        public string GeneratePDF(int Inv)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<h1>hiiiii</hi>");
+            return sb.ToString();
         }
     }
 }

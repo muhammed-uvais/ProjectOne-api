@@ -117,6 +117,17 @@ namespace ProjectOne.Repository.Repository
                             Context.SaveChanges();
                         }
                     }
+                    InvoiceAmount invoiceAmount = new InvoiceAmount
+                    {
+                        InvoiceHdrId = invoicehdr.Id,
+                        TaxableValue = entity.InvoiceAmount.TaxableValue,
+                        Vatamount = entity.InvoiceAmount.Vatamount,
+                        TotalAmount = entity.InvoiceAmount.TotalAmount,
+                        IsActive = entity.InvoiceAmount.IsActive,
+
+                    };
+                    Context.InvoiceAmounts.Add(invoiceAmount);
+                    Context.SaveChanges();
 
                     transaction.Commit();
                     Rslt.Id = invoicehdr.Id;
@@ -155,8 +166,27 @@ namespace ProjectOne.Repository.Repository
                         detail.Vatumber = entity.CustomerDetails.Vatumber;
                         Context.SaveChanges();
                     }
-                    var previousItems = Context.InvoiceContents.Where(x => x.InvoiceHdrId == entity.Id).ToList();
+                    var previousItems = Context.InvoiceContents.
+                        Where(x => x.InvoiceHdrId == entity.Id && x.IsActive == 1).ToList();
                     previousItems.ForEach(x => { x.IsActive = 0; });
+                    Context.SaveChanges();
+
+                    var invamount = Context.InvoiceAmounts.
+                        Where(x => x.InvoiceHdrId == entity.Id && x.IsActive == 1).FirstOrDefault();
+                    invamount.IsActive = 0;
+                    Context.SaveChanges();
+
+                    InvoiceAmount invoiceAmount = new InvoiceAmount
+                    {
+                        InvoiceHdrId = invoiceHdr.Id,
+                        TaxableValue = entity.InvoiceAmount.TaxableValue,
+                        Vatamount = entity.InvoiceAmount.Vatamount,
+                        TotalAmount = entity.InvoiceAmount.TotalAmount,
+                        IsActive = entity.InvoiceAmount.IsActive,
+
+                    };
+                    Context.InvoiceAmounts.Add(invoiceAmount);
+                    Context.SaveChanges();
                     foreach (var item in entity.InvoiceItems)
                     {
                         if (item != null)
@@ -178,6 +208,7 @@ namespace ProjectOne.Repository.Repository
                             Context.SaveChanges();
                         }
                     }
+
                     transaction.Commit();
                     Rslt.Id = entity.Id;
                 }
@@ -233,7 +264,7 @@ namespace ProjectOne.Repository.Repository
                                CustomerName = customer.Name,
                                CreatedDate = hdr.CreatedDate,
                                IsActive = hdr.IsActive
-                           }).ToList();
+                           }).OrderByDescending(f => f.Number).ToList();
             if(FromDate != null && ToDate != null )
             {
                 rtndata = rtndata.Where(hdr =>  hdr.CreatedDate.Date >=  FromDate.Value.Date && hdr.CreatedDate.Date <= ToDate.Value.Date).ToList();
@@ -281,6 +312,19 @@ namespace ProjectOne.Repository.Repository
                                                Vatumber =customer.Vatumber,
                                                IsActive = customer.IsActive
                                            }).FirstOrDefault();
+                rtndata.InvoiceAmount = (from amt in Context.InvoiceAmounts
+                                         join inv in Context.InvoiceHdrs
+                                         on amt.InvoiceHdrId equals inv.Id
+                                         where amt.IsActive == 1
+                                         && amt.InvoiceHdrId == rtndata.Id
+                                         select new InvoiceAmountEntity {
+                                            Id = amt.Id,
+                                            InvoiceHdrId =amt.InvoiceHdrId,
+                                            TaxableValue = amt.TaxableValue,    
+                                            Vatamount = amt.Vatamount,
+                                            TotalAmount = amt.TotalAmount,
+                                            IsActive = amt.IsActive,
+                                         }).FirstOrDefault();
 
                 }
             return rtndata;

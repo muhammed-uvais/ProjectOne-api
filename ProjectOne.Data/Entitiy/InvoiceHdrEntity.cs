@@ -19,5 +19,6 @@ namespace ProjectOne.Data.Entitiy
         public InvoiceCustomerDetailEntity CustomerDetails { get; set; }
 
         public IEnumerable<InvoiceContentEntity> InvoiceItems { get; set; }
+        public InvoiceAmountEntity InvoiceAmount { get; set; }
     }
 }

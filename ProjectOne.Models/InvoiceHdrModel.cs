@@ -18,5 +18,7 @@ namespace ProjectOne.Models
          
         public InvoiceCustomerDetailModel CustomerDetails { get; set; }
         public IEnumerable<InvoiceContentModel> InvoiceItems { get; set; }
+
+        public InvoiceAmountModel InvoiceAmount { get; set; }
     }
 }
