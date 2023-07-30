@@ -15,6 +15,8 @@ public partial class InvoiceContent
 
     public long? QtyPerDay { get; set; }
 
+    public decimal? Price { get; set; }
+
     public int? Vatpercentage { get; set; }
 
     public decimal? TaxableValue { get; set; }

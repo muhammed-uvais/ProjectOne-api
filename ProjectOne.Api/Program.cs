@@ -1,4 +1,6 @@
 using AutoMapper;
+using DinkToPdf.Contracts;
+using DinkToPdf;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +14,7 @@ using ProjectOne.Data.DbEntities;
 using ProjectOne.Repository;
 using ProjectOne.Service;
 using System.Text;
+using Wkhtmltopdf.NetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +46,8 @@ var config = new AutoMapper.MapperConfiguration(cfg =>
 
 var mapper = config.CreateMapper();
 builder.Services.AddSingleton(mapper);
+builder.Services.AddWkhtmltopdf();
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
 var appSettings = appSettingsSection.Get<AppSettings>();

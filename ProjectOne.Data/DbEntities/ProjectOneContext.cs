@@ -124,6 +124,7 @@ public partial class ProjectOneContext : DbContext
         {
             entity.Property(e => e.Date).HasColumnType("date");
             entity.Property(e => e.Description).HasMaxLength(400);
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TaxableValue).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Vatamount)
@@ -135,7 +136,9 @@ public partial class ProjectOneContext : DbContext
         modelBuilder.Entity<InvoiceCustomerDetail>(entity =>
         {
             entity.Property(e => e.Address).HasMaxLength(350);
+            entity.Property(e => e.Email).HasMaxLength(150);
             entity.Property(e => e.Name).HasMaxLength(150);
+            entity.Property(e => e.Phone).HasMaxLength(50);
             entity.Property(e => e.Vatumber).HasMaxLength(50);
         });
 

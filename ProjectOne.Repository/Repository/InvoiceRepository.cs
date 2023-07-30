@@ -91,6 +91,8 @@ namespace ProjectOne.Repository.Repository
                         Name = entity.CustomerDetails.Name,
                         Address = entity.CustomerDetails.Address,
                         Vatumber = entity.CustomerDetails.Vatumber,
+                        Phone = entity.CustomerDetails.Phone,
+                        Email= entity.CustomerDetails.Email,
                         IsActive = 1,
                          };
                     Context.InvoiceCustomerDetails.Add(invoiceCustomerDetail);
@@ -107,6 +109,7 @@ namespace ProjectOne.Repository.Repository
                                 Description = item.Description,
                                 Date = item.Date,
                                 QtyPerDay = item.QtyPerDay,
+                                Price = item.Price,
                                 Vatpercentage = item.Vatpercentage,
                                 TaxableValue = item.TaxableValue,
                                 Vatamount = item.Vatamount,
@@ -164,6 +167,8 @@ namespace ProjectOne.Repository.Repository
                         detail.Name = entity.CustomerDetails.Name;
                         detail.Address = entity.CustomerDetails.Address;
                         detail.Vatumber = entity.CustomerDetails.Vatumber;
+                        detail.Phone = entity.CustomerDetails.Phone;
+                        detail.Email = entity.CustomerDetails.Email;
                         Context.SaveChanges();
                     }
                     var previousItems = Context.InvoiceContents.
@@ -198,6 +203,7 @@ namespace ProjectOne.Repository.Repository
                                 Description = item.Description,
                                 Date = item.Date,
                                 QtyPerDay = item.QtyPerDay,
+                                Price = item.Price,
                                 Vatpercentage = item.Vatpercentage,
                                 TaxableValue = item.TaxableValue,
                                 Vatamount = item.Vatamount,
@@ -295,6 +301,7 @@ namespace ProjectOne.Repository.Repository
                                             Description = chld.Description,
                                             Date    = chld.Date,
                                             QtyPerDay = chld.QtyPerDay,
+                                            Price = chld.Price,
                                             Vatpercentage = chld.Vatpercentage,
                                             TaxableValue = chld.TaxableValue,
                                             Vatamount = chld.Vatamount,
@@ -310,6 +317,8 @@ namespace ProjectOne.Repository.Repository
                                                Name = customer.Name,
                                                Address = customer.Address,
                                                Vatumber =customer.Vatumber,
+                                               Phone = customer.Phone,
+                                               Email = customer.Email,
                                                IsActive = customer.IsActive
                                            }).FirstOrDefault();
                 rtndata.InvoiceAmount = (from amt in Context.InvoiceAmounts

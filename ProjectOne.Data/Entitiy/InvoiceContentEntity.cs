@@ -17,6 +17,7 @@ namespace ProjectOne.Data.Entitiy
         public DateTime? Date { get; set; }
 
         public long? QtyPerDay { get; set; }
+        public decimal? Price { get; set; }
 
         public int? Vatpercentage { get; set; }
 
