@@ -69,6 +69,15 @@ builder.Services.AddAuthentication(x =>
                    ValidateAudience = false
                };
            });
+//builder.Services.AddCors(options =>
+//{
+//    options.AddDefaultPolicy(builder =>
+//    {
+//        builder.AllowAnyOrigin()
+//               .AllowAnyHeader()
+//               .AllowAnyMethod();
+//    });
+//});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

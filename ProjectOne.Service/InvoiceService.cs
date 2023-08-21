@@ -20,7 +20,7 @@ namespace ProjectOne.Service
         InvoiceHdrModel GetById(int Id);
         string GeneratePDF(int Inv);
 
-
+        List<InvoiceCustomerDetailModel> SearchCustomerByName(string customerName);
     }
 
     public class InvoiceService : IInvoiceService
@@ -231,6 +231,10 @@ namespace ProjectOne.Service
             sb.Append("</html>");
 
                 return sb.ToString();
+        }
+        public List<InvoiceCustomerDetailModel> SearchCustomerByName(string customerName)
+        {
+            return _mapper.Map<List<InvoiceCustomerDetailModel>>(_invoiceRepository.SearchCustomerByName(customerName));
         }
     }
 }

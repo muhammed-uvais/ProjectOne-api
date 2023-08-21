@@ -14,6 +14,7 @@ namespace ProjectOne.Repository.Repository
         CommandResult DeleteById(int Id);
         List<InvoiceHdrEntity> GetAll(DateTime? FromDate, DateTime? ToDate);
         InvoiceHdrEntity GetById(int Id);
+        List<InvoiceCustomerDetailEntity> SearchCustomerByName(string customerName);
     }
 
     public class InvoiceRepository : IInvoiceRepository
@@ -277,7 +278,7 @@ namespace ProjectOne.Repository.Repository
             }
             return rtndata;
         }
-       public InvoiceHdrEntity GetById(int Id)
+        public InvoiceHdrEntity GetById(int Id)
        {
             var rtndata = (from hdr in Context.InvoiceHdrs
                            where hdr.IsActive == 1 && hdr.Id == Id
@@ -336,6 +337,29 @@ namespace ProjectOne.Repository.Repository
                                          }).FirstOrDefault();
 
                 }
+            return rtndata;
+        }
+        public List<InvoiceCustomerDetailEntity>SearchCustomerByName(string customerName)
+        {
+            if (customerName == null || customerName == "fetchall")
+            {
+                customerName = "";
+            }
+
+            var rtndata = (from customer in Context.InvoiceCustomerDetails
+                           where customer.IsActive == 1
+                           && customer.Name.ToLower().Contains(customerName.Trim().ToLower())
+                           select new InvoiceCustomerDetailEntity {
+                               Id=customer.Id,
+                               Name = customer.Name,
+                               Address = customer.Address,
+                               Email = customer.Email,
+                               Phone = customer.Phone,
+                               Vatumber = customer.Vatumber
+                               
+                           
+                           }).ToList();
+
             return rtndata;
         }
 

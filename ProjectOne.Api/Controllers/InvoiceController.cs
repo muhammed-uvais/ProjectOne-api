@@ -138,5 +138,11 @@ namespace ProjectOne.Api.Controllers
 
            
         }
+        [HttpGet]
+        [Route("CustomerSearchByName")]
+        public List<InvoiceCustomerDetailModel> CustomerSearchByName(string customerName)
+        {
+            return _invoiceService.SearchCustomerByName(customerName);
+        }
     }
 }
