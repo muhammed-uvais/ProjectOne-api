@@ -126,17 +126,36 @@ namespace ProjectOne.Service
                 " </tr>" +
                 "<tr>" +
                 "<td style=\"word-break: break-all;\" >" +
-                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>Customer Name : </strong> " + CustomerName + "</p>" +
+                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>Customer Name : </strong> " + CustomerName + "</p>");
                 //"<p style=\"margin: 0px 87px 5px 0px;\"><strong>Address:</strong>" + CustomerAddress + "</p>" +
-                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>TRN : </strong>" + CustomerVAT + "</p>" +
-                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>Email : </strong>" + CustomerEmail + "</p>" +
-                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>Phone : </strong>" + CustomerPhone + "</p>" +
-                "</td>" +
+
+
+                if (CustomerVAT != "") {
+
+                   sb.Append(  "<p style=\"margin: 0px 87px 5px 0px;\"><strong>TRN : </strong>" + CustomerVAT + "</p>"); 
+                }
+
+
+            sb.Append(
+
+              //  "<p style=\"margin: 0px 87px 5px 0px;\"><strong>Email : </strong>" + CustomerEmail + "</p>" +
+              //"<p style=\"margin: 0px 87px 5px 0px;\"><strong>Phone : </strong>" + CustomerPhone + "</p>" +
+
+              "</td>");
+            sb.Append(
+
                 "<td  style=\"word-break: break-all;\">" +
-                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>Invoice Number : </strong>"+NumberDisplay+"</p>" +
-                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>Invoice Date : </strong>"+EntryDate+"</p>" +
-                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>TRN : </strong>"+CompanyVatNumber+"</p>" +
-                "</td>" +
+                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>Invoice Number : </strong>" + NumberDisplay + "</p>" +
+                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>Invoice Date : </strong>" + EntryDate + "</p>");
+            if(getInvoicebyId.DisableTrn == 0)
+            {
+
+              sb.Append(
+                "<p style=\"margin: 0px 87px 5px 0px;\"><strong>TRN : </strong>" + CompanyVatNumber + "</p>" +
+                "</td>"); 
+            }
+
+            sb.Append(
                 "</tr>" +
                 "<tr>" +
                 "<td style=\"word-break: break-all;width: 60%;\" >" +

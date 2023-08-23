@@ -75,9 +75,32 @@ namespace ProjectOne.Repository.Repository
                         refnodisplay = prefix + (refno).ToString();
                     }
 
+
+
+
+                        InvoiceCustomerDetail invoiceCustomerDetail = new InvoiceCustomerDetail
+                        {
+
+
+                            Name = entity.CustomerDetails.Name,
+                            Address = entity.CustomerDetails.Address,
+                            Vatumber = entity.CustomerDetails.Vatumber,
+                            Phone = entity.CustomerDetails.Phone,
+                            Email = entity.CustomerDetails.Email,
+                            IsActive = 1,
+                        };
+
+
+                    if (entity.CustomerDetails.Id.Equals(0))
+                    {
+                        Context.InvoiceCustomerDetails.Add(invoiceCustomerDetail);
+                        Context.SaveChanges();
+                    }
                     InvoiceHdr invoicehdr = new InvoiceHdr
                     {
+                        InvoiceCustomerDetailsId = entity.CustomerDetails.Id == 0 ? invoiceCustomerDetail.Id : entity.CustomerDetails.Id ,
                         Number = refno,
+                        DisableTrn = entity.DisableTrn,
                         EntryDate = entity.EntryDate,
                         NumberDisplay = refnodisplay,
                         CreatedDate = DateTime.Now,
@@ -86,18 +109,6 @@ namespace ProjectOne.Repository.Repository
                     Context.InvoiceHdrs.Add(invoicehdr);
                     Context.SaveChanges();
 
-                    InvoiceCustomerDetail invoiceCustomerDetail = new InvoiceCustomerDetail { 
-                        
-                        InvoiceHdrId = invoicehdr.Id,
-                        Name = entity.CustomerDetails.Name,
-                        Address = entity.CustomerDetails.Address,
-                        Vatumber = entity.CustomerDetails.Vatumber,
-                        Phone = entity.CustomerDetails.Phone,
-                        Email= entity.CustomerDetails.Email,
-                        IsActive = 1,
-                         };
-                    Context.InvoiceCustomerDetails.Add(invoiceCustomerDetail);
-                    Context.SaveChanges();
 
 
                     foreach (var item in entity.InvoiceItems)
@@ -154,15 +165,8 @@ namespace ProjectOne.Repository.Repository
                             return Rslt;
                         }
                     }
-                    InvoiceHdr invoiceHdr = Context.InvoiceHdrs.Find(entity.Id);
-                    if (invoiceHdr != null)
-                    {
-                        invoiceHdr.EntryDate = entity.EntryDate;
-                        invoiceHdr.CreatedDate =DateTime.Now;
-                        Context.SaveChanges();
-                    }
                     InvoiceCustomerDetail detail = Context.InvoiceCustomerDetails.
-                        Where(x => x.InvoiceHdrId == entity.Id && x.Id == entity.CustomerDetails.Id).FirstOrDefault();
+                        Where(x =>  x.Id == entity.CustomerDetails.Id).FirstOrDefault();
                     if (detail != null)
                     {
                         detail.Name = entity.CustomerDetails.Name;
@@ -172,6 +176,17 @@ namespace ProjectOne.Repository.Repository
                         detail.Email = entity.CustomerDetails.Email;
                         Context.SaveChanges();
                     }
+
+                    InvoiceHdr invoiceHdr = Context.InvoiceHdrs.Find(entity.Id);
+                    if (invoiceHdr != null)
+                    {
+                        invoiceHdr.InvoiceCustomerDetailsId = entity.CustomerDetails.Id;
+                        invoiceHdr.EntryDate = entity.EntryDate;
+                        invoiceHdr.DisableTrn = entity.DisableTrn;
+                        invoiceHdr.CreatedDate =DateTime.Now;
+                        Context.SaveChanges();
+                    }
+                    
                     var previousItems = Context.InvoiceContents.
                         Where(x => x.InvoiceHdrId == entity.Id && x.IsActive == 1).ToList();
                     previousItems.ForEach(x => { x.IsActive = 0; });
@@ -259,7 +274,7 @@ namespace ProjectOne.Repository.Repository
         {
             var rtndata = (from hdr in Context.InvoiceHdrs
                            join customer in Context.InvoiceCustomerDetails
-                           on hdr.Id equals customer.InvoiceHdrId
+                           on hdr.InvoiceCustomerDetailsId equals customer.Id
                            where hdr.IsActive == 1
                            && customer.IsActive == 1
                            select new InvoiceHdrEntity
@@ -284,7 +299,9 @@ namespace ProjectOne.Repository.Repository
                            where hdr.IsActive == 1 && hdr.Id == Id
                            select new InvoiceHdrEntity{
                                Id = hdr.Id,
+                               InvoiceCustomerDetailsId = hdr.InvoiceCustomerDetailsId,
                                EntryDate = hdr.EntryDate,
+                               DisableTrn = hdr.DisableTrn,
                                Number = hdr.Number,
                                NumberDisplay = hdr.NumberDisplay,
                                CreatedDate = hdr.CreatedDate,
@@ -310,11 +327,10 @@ namespace ProjectOne.Repository.Repository
                                             IsActive = chld.IsActive,
                                         }).ToList();
                 rtndata.CustomerDetails = (from customer in Context.InvoiceCustomerDetails
-                                           where customer.InvoiceHdrId == rtndata.Id && customer.IsActive == 1
+                                           where customer.Id == rtndata.InvoiceCustomerDetailsId && customer.IsActive == 1
                                            select new InvoiceCustomerDetailEntity
                                            {
                                                Id = customer.Id,
-                                               InvoiceHdrId = customer.InvoiceHdrId,
                                                Name = customer.Name,
                                                Address = customer.Address,
                                                Vatumber =customer.Vatumber,

@@ -9,6 +9,8 @@ namespace ProjectOne.Models
     public class InvoiceHdrModel
     {
         public int Id { get; set; }
+        public int? InvoiceCustomerDetailsId { get; set; }
+        public int? DisableTrn { get; set; }
         public long Number { get; set; }
         public string NumberDisplay { get; set; } = null!;
         public DateTime EntryDate { get; set; }

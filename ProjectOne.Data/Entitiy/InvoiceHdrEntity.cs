@@ -9,6 +9,8 @@ namespace ProjectOne.Data.Entitiy
     public class InvoiceHdrEntity
     {
         public int Id { get; set; }
+        public int? InvoiceCustomerDetailsId { get; set; }
+        public int? DisableTrn { get; set; }
         public long Number { get; set; }
         public string NumberDisplay { get; set; } = null!;
         public string? CustomerName { get; set; }

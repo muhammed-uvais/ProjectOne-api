@@ -147,6 +147,7 @@ public partial class ProjectOneContext : DbContext
             entity.ToTable("InvoiceHdr");
 
             entity.Property(e => e.CreatedDate).HasColumnType("date");
+            entity.Property(e => e.DisableTrn).HasColumnName("DisableTRN");
             entity.Property(e => e.EntryDate).HasColumnType("date");
             entity.Property(e => e.NumberDisplay)
                 .HasMaxLength(50)

@@ -10,7 +10,6 @@ namespace ProjectOne.Data.Entitiy
     {
         public int Id { get; set; }
 
-        public int InvoiceHdrId { get; set; }
 
         public string? Name { get; set; }
         public string? Email { get; set; }

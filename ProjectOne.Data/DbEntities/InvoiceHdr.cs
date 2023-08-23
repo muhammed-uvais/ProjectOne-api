@@ -7,6 +7,10 @@ public partial class InvoiceHdr
 {
     public int Id { get; set; }
 
+    public int? DisableTrn { get; set; }
+
+    public int? InvoiceCustomerDetailsId { get; set; }
+
     public DateTime EntryDate { get; set; }
 
     public long Number { get; set; }
