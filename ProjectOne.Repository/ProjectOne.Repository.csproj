@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ProjectOne.Common\ProjectOne.Common.csproj" />
     <ProjectReference Include="..\ProjectOne.Data\ProjectOne.Data.csproj" />
   </ItemGroup>

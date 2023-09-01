@@ -27,7 +27,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ProjectOneContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-}); 
+});
+
+
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<UserResult, UserResult>();
 builder.Services.AddTransient<CommandResult, CommandResult>();
@@ -69,15 +72,13 @@ builder.Services.AddAuthentication(x =>
                    ValidateAudience = false
                };
            });
-//builder.Services.AddCors(options =>
-//{
-//    options.AddDefaultPolicy(builder =>
-//    {
-//        builder.AllowAnyOrigin()
-//               .AllowAnyHeader()
-//               .AllowAnyMethod();
-//    });
-//});
+
+
+builder.Services.AddCors(p => p.AddPolicy("corspolicy" , build =>
+{
+    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -87,13 +88,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(x => x
-               .AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader()
-            );
+
+
 
 app.UseRouting();
+app.UseCors("corspolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCookiePolicy();
