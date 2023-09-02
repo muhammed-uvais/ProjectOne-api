@@ -93,6 +93,8 @@ namespace ProjectOne.Service
             var imgfoldername = Path.Combine(Directory.GetCurrentDirectory(), "CompanyFiles");
             var logoimg = Path.Combine(imgfoldername, "companylogo.png");
             var textenglish = Path.Combine(imgfoldername, "textenglish.png");
+            var SignImg = Path.Combine(imgfoldername, "sign.jpg");
+            var StampImg = Path.Combine(imgfoldername, "stamp.jpg");
 
             StringBuilder sb = new StringBuilder();
             sb.Append(
@@ -232,19 +234,42 @@ namespace ProjectOne.Service
                 "");
 
 
-            sb.Append("<div style=\"padding: 10px 4px;\">" +
-                "<table style=\"border-collapse: collapse;border: 1px solid black;\">" +
-                "<tr style=\"border: 1px solid black;\">" +
-                "<th colspan=\"2\" style=\"text-align: center;\">Bank Details</th>" +
+            sb.Append("<div style=\"padding: 10px 4px;\">");
+            sb.Append("<table> <tr>");
+
+            sb.Append("<td> <table style=\"border-collapse: collapse;border: 1px solid black;margin-right: 60px;\">" +
+             "<tr style=\"border: 1px solid black;\">" +
+             "<th colspan=\"2\" style=\"text-align: center;\">Bank Details</th>" +
+             "</tr>" +
+
+             "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;text-align:left;\"> <strong>Name</strong>  </td><td style=\"width:300px;text-align:left;\"> :   " + BanckAccountName + "</td></tr>" +
+             "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;\"> <strong>Bank</strong>  </td><td style=\"width:300px;text-align:left;\"> :   " + BankName + "</td></tr>" +
+             "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;\"> <strong>A/C No.</strong> </td><td style=\"width:300px;text-align:left;\"> :   " + BankAccountNumber + "</td></tr>" +
+             "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;\"><strong>IBAN No.</strong>  </td><td style=\"width:300px;text-align:left;\"> :   " + Bankiban + "</td></tr>" +
+             "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;\"><strong>IFSC Code</strong>  </td><td style=\"width:300px;text-align:left;\"> :   " + BankIFSC + "</td> </tr>" +
+             "</table> </td>");
+            sb.Append(
+                "<td>" +
+                "<table>" +
+                "<tr>"+
+                "<td>" +
+                "<img src=\"" + StampImg + "\" alt=\"My Image\" style=\"height: 250px;width: 230px;object-fit: contain;\">" +
+                "</td>" 
+                + "<td>" +
+                "<img src=\"" + SignImg + "\" alt=\"My Image\" style=\"height: 118px;width: 157px;object-fit: contain;\">" +
+                "</td>" +
                 "</tr>" +
 
-                "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;text-align:left;\"> <strong>Name</strong>  </td><td style=\"width:300px;text-align:left;\"> :   " + BanckAccountName + "</td></tr>" +
-                "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;\"> <strong>Bank</strong>  </td><td style=\"width:300px;text-align:left;\"> :   " + BankName + "</td></tr>" +
-                "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;\"> <strong>A/C No.</strong> </td><td style=\"width:300px;text-align:left;\"> :   " + BankAccountNumber + "</td></tr>" +
-                "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;\"><strong>IBAN No.</strong>  </td><td style=\"width:300px;text-align:left;\"> :   " + Bankiban + "</td></tr>" +
-                "<tr> <td style=\"padding:2px 0px 5px 5px;width:100px;\"><strong>IFSC Code</strong>  </td><td style=\"width:300px;text-align:left;\"> :   " + BankIFSC + "</td> </tr>" +
                 "</table>" +
-                "</div>");
+
+                "</td>"
+                );
+
+
+            sb.Append("</tr> </table>");
+
+
+            sb.Append( "</div>");
 
             sb.Append("</body>");
             sb.Append("</html>");

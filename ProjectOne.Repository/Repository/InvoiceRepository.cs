@@ -289,7 +289,7 @@ namespace ProjectOne.Repository.Repository
                            }).OrderByDescending(f => f.Number).ToList();
             if(FromDate != null && ToDate != null )
             {
-                rtndata = rtndata.Where(hdr =>  hdr.CreatedDate.Date >=  FromDate.Value.Date && hdr.CreatedDate.Date <= ToDate.Value.Date).ToList();
+                rtndata = rtndata.Where(hdr =>  hdr.EntryDate.Date >=  FromDate.Value.Date && hdr.EntryDate.Date <= ToDate.Value.Date).ToList();
             }
             return rtndata;
         }
