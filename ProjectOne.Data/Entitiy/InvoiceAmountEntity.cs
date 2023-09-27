@@ -15,6 +15,7 @@ namespace ProjectOne.Data.Entitiy
         public decimal? TaxableValue { get; set; }
 
         public decimal? Vatamount { get; set; }
+        public decimal? Vatexcludedamount { get; set; }
 
         public decimal? TotalAmount { get; set; }
 

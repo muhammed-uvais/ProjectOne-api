@@ -118,13 +118,16 @@ public partial class ProjectOneContext : DbContext
             entity.Property(e => e.Vatamount)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("VATAmount");
+            entity.Property(e => e.Vatexcludedamount).HasColumnType("decimal(18, 2)");
         });
 
         modelBuilder.Entity<InvoiceContent>(entity =>
         {
             entity.Property(e => e.Date).HasColumnType("date");
             entity.Property(e => e.Description).HasMaxLength(400);
+            entity.Property(e => e.Parking).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Salik).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TaxableValue).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.TotalAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Vatamount)

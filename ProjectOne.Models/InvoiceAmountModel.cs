@@ -13,6 +13,7 @@ namespace ProjectOne.Models
         public int InvoiceHdrId { get; set; }
 
         public decimal? TaxableValue { get; set; }
+        public decimal? Vatexcludedamount { get; set; }
 
         public decimal? Vatamount { get; set; }
 

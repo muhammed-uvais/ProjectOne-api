@@ -93,8 +93,13 @@ namespace ProjectOne.Service
             var imgfoldername = Path.Combine(Directory.GetCurrentDirectory(), "CompanyFiles");
             var logoimg = Path.Combine(imgfoldername, "companylogo.png");
             var textenglish = Path.Combine(imgfoldername, "textenglish.png");
-            var SignImg = Path.Combine(imgfoldername, "sign.jpg");
+            var SignImg = Path.Combine(imgfoldername, "sign.png");
             var StampImg = Path.Combine(imgfoldername, "stamp.jpg");
+
+
+            bool isParking = getInvoicebyId.InvoiceItems.Any(x => x.Parking != 0 && x.Parking != null);
+            bool isSalik = getInvoicebyId.InvoiceItems.Any(x => x.Salik != 0 && x.Salik != null);
+
 
             StringBuilder sb = new StringBuilder();
             sb.Append(
@@ -117,8 +122,8 @@ namespace ProjectOne.Service
                 "<div style=\"padding:0px 80px 20px 80px;\">"
                 );
 
-            sb.Append("<img src=\"" + logoimg + "\" alt=\"My Image\" style=\"height: 118px;width: 157px;object-fit: contain;\">");
-            sb.Append("<img src=\"" + textenglish + "\" alt=\"My Image\" style=\"height: 110px;\">");
+            sb.Append("<img src=\"" + logoimg + "\" alt=\"My Image\" style=\"height: 100px;width: 140px;object-fit: contain;margin-top:8px;padding:10px;\">");
+            sb.Append("<img src=\"" + textenglish + "\" alt=\"My Image\" style=\"height: 110px;margin-top:8px;\">");
             sb.Append("</div>");
             sb.Append("<div>");
             sb.Append("<table style=\"border-collapse: collapse; width: 100%;\">" +
@@ -176,8 +181,18 @@ namespace ProjectOne.Service
                 "<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">No</th>" +
                 "<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">Description</th>" +
                 "<th style=\"border: 1px solid black; padding: 8px; text-align: center;white-space:normal;\">Date</th>" +
-                "<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">Qty/Day</th>" +
-                "<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">Price</th>" +
+                "<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">Qty/Day</th>");
+
+            if (isParking)
+            {
+                sb.Append("<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">Parking</th>");
+            }
+            if (isSalik)
+            {
+                sb.Append("<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">Salik</th>");
+            }
+
+            sb.Append( "<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">Price</th>" +
                 "<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">VAT %</th>" +
                 "<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">Taxable Value (AED)</th>" +
                 "<th style=\"border: 1px solid black; padding: 8px; text-align: center;\">VAT (AED)</th>" +
@@ -192,11 +207,25 @@ namespace ProjectOne.Service
 
 
                 sb.Append("<tr>" +
-                    "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">" + slno++ +"</td>" +
-                    "<td style=\"padding: 20px 8px; text-align: left;border-right: 1px solid black;\">" + item.Description+"</td>" +
+                    "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">" + slno++ + "</td>" +
+                    "<td style=\"padding: 20px 8px; text-align: left;border-right: 1px solid black;\">" + item.Description + "</td>" +
                     "<td style=\"padding: 20px 8px; text-align: center;white-space:nowrap;border-right: 1px solid black;\">" + item.Date.ToString().Split(" ")[0] + "</td>" +
-                    "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">" + item.QtyPerDay+"</td>" +
-                    "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">" + item.Price +"</td>" +
+                    "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">" + item.QtyPerDay + "</td>");
+
+                if (isParking)
+                {
+                    sb.Append(
+                        "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">" + item.Parking + "</td>" 
+                        );
+                }
+                if (isSalik)
+                {
+                    sb.Append(
+                        "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">" + item.Salik + "</td>" 
+                        );
+                }
+
+                sb.Append(  "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">" + item.Price +"</td>" +
                     "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">"  + item.Vatpercentage +"</td>" +
                     "<td style=\"padding:20px 8px; text-align: center;border-right: 1px solid black;\">" + item.TaxableValue+"</td>" +
                     "<td style=\"padding: 20px 8px; text-align: center;border-right: 1px solid black;\">" + item.Vatamount +"</td>" +
@@ -209,6 +238,7 @@ namespace ProjectOne.Service
             var taxableval = getInvoicebyId.InvoiceAmount.TaxableValue.ToString() ?? "";
             var vatamt = getInvoicebyId.InvoiceAmount.Vatamount.ToString() ?? "";
             var totalamt = getInvoicebyId.InvoiceAmount.TotalAmount.ToString() ?? "";
+            var vatexcludedamount = getInvoicebyId.InvoiceAmount.Vatexcludedamount.ToString() ?? "";
 
             sb.Append("<div style=\"margin-bottom: 20px;margin-left: 500px;\">" +
                 "<table>" +
@@ -218,12 +248,22 @@ namespace ProjectOne.Service
                 "<td style=\"text-align: right;padding-left:25px;\">" + taxableval + "</td>" +
                 "</tr>" +
 
-                "<tr>"+
+                "<tr>" +
                  "<td style=\"text-align: right; \"><strong>VAT @ 5%:</strong></td>" +
                 "<td style=\"text-align: right;padding-left:25px;\">" + vatamt + "</td>" +
-                "</tr>" +
+                "</tr>");
+            if (vatexcludedamount != "" && (double.Parse(vatexcludedamount) > 0)) {
+                sb.Append(
 
-                "<tr>" +
+                    "<tr>" +
+                 "<td style=\"text-align: right; \"><strong>Tax Excluded Items:</strong></td>" +
+                "<td style=\"text-align: right;padding-left:25px;\">" + vatexcludedamount + "</td>" +
+                "</tr>"
+                    );
+
+            }
+
+                sb.Append("<tr>" +
                 "<td style=\"text-align: right; \"><strong>Total Amount in AED (AED):</strong></td>" +
                 "<td style=\"text-align: right;padding-left:25px;\">" + totalamt + "</td>" +
                 "</tr>" +
@@ -254,9 +294,6 @@ namespace ProjectOne.Service
                 "<tr>"+
                 "<td>" +
                 "<img src=\"" + StampImg + "\" alt=\"My Image\" style=\"height: 250px;width: 230px;object-fit: contain;\">" +
-                "</td>" 
-                + "<td>" +
-                "<img src=\"" + SignImg + "\" alt=\"My Image\" style=\"height: 118px;width: 157px;object-fit: contain;\">" +
                 "</td>" +
                 "</tr>" +
 

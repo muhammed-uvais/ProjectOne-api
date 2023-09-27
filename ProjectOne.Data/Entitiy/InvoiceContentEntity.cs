@@ -15,6 +15,9 @@ namespace ProjectOne.Data.Entitiy
         public string? Description { get; set; }
 
         public DateTime? Date { get; set; }
+        public decimal? Salik { get; set; }
+
+        public decimal? Parking { get; set; }
 
         public long? QtyPerDay { get; set; }
         public decimal? Price { get; set; }

@@ -18,6 +18,9 @@ namespace ProjectOne.Models
 
         public long? QtyPerDay { get; set; }
         public decimal? Price { get; set; }
+        public decimal? Salik { get; set; }
+
+        public decimal? Parking { get; set; }
 
         public int? Vatpercentage { get; set; }
 
