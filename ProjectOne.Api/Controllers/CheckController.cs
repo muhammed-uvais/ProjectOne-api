@@ -17,6 +17,7 @@ namespace ProjectOne.Api.Controllers
         [HttpGet]
         public string GetName()
         {
+        
             return this._class1Service.NameData();
         }
 
